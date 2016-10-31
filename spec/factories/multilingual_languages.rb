@@ -1,11 +1,13 @@
 FactoryGirl.define do
+  factory :empty_language, class: 'Multilingual::Language' do
+  end
   factory :english, class: 'Multilingual::Language' do
-    code 'en'
+      code 'en'
   end
   factory :german, class: 'Multilingual::Language' do
-    code 'de'
+      code 'de'
   end
   factory :french, class: 'Multilingual::Language' do
-    code 'fr'
+      code 'fr'
   end
 end
