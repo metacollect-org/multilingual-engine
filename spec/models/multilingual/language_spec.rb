@@ -4,40 +4,48 @@ module Multilingual
   shared_examples 'a valid language' do |attr|
     let(:lang) { described_class.create(**attr) }
 
-    it 'has a valid factory' do
+    it 'its Factory is valid' do
       expect(lang).to be_valid
     end
 
-    context 'when validating @code' do
-      it 'is invalid without a code' do
+    context 'is invalid when @code is' do
+      it 'missing' do
           lang.code = nil
           expect(lang).to_not be_valid
       end
 
-      it 'is invalid with an empty code' do
+      it 'empty' do
           lang.code = ''
           expect(lang).to_not be_valid
       end
 
-      it 'is invalid with a one-letter code' do
+      it 'one-letter long' do
           lang.code = 'a'
           expect(lang).to_not be_valid
       end
 
-      it 'is invalid with a three-letter code' do
+      it 'three-letters long' do
           lang.code = 'abc'
           expect(lang).to_not be_valid
       end
+    end
 
-      it 'is invalid without a unique code' do
-          expect(lang.code).to eq(attr[:code])
-          second = described_class.create(**attr)
-          expect(second).to_not be_valid
+    context '@code uniqueness' do
+      let(:second) { described_class.create(**attr) }
+
+      it 'record has the given code' do
+        expect(lang.code).to eq(attr[:code])
       end
 
-      it 'is valid with a unique two-letter code' do
-          lang.code = 'fu'
-          expect(lang).to be_valid
+      it 'is violated by another model with the same code' do
+        expect(lang).to be_valid
+        expect(second).to_not be_valid
+      end
+
+      it 'is fulfilled by another model with a different two-letter code' do
+        expect(lang).to be_valid
+        second.code = 'fu'
+        expect(second).to be_valid
       end
     end
   end
