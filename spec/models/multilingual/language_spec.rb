@@ -1,9 +1,8 @@
 require 'rails_helper'
+require 'set'
 
 module Multilingual
-  shared_examples 'a valid language' do |attr|
-    let(:lang) { described_class.create(**attr) }
-
+  shared_examples 'a valid language' do
     it 'its Factory is valid' do
       expect(lang).to be_valid
     end
@@ -31,10 +30,8 @@ module Multilingual
     end
 
     context '@code uniqueness' do
-      let(:second) { described_class.create(**attr) }
-
       it 'record has the given code' do
-        expect(lang.code).to eq(attr[:code])
+        expect(lang.code).to eq(code)
       end
 
       it 'is violated by another model with the same code' do
@@ -48,17 +45,92 @@ module Multilingual
         expect(second).to be_valid
       end
     end
+
+    context 'CRUD' do
+      it 'is correctly created and destroyed' do
+        expect(Multilingual::Language.count).to eq(0)
+        lang  # create object
+        expect(Multilingual::Language.count).to eq(1)
+        lang.destroy  # destroy object
+        expect(Multilingual::Language.count).to eq(0)
+      end
+    end
   end
 
   RSpec.describe Language, type: :model do
-    context 'English' do
-      it_behaves_like 'a valid language', FactoryGirl.attributes_for(:english)
+    context 'with English' do
+      it_behaves_like 'a valid language' do
+        let(:lang) { FactoryGirl.create(:english_language) }
+        let(:second) { FactoryGirl.build(:english_language) }
+        let(:code) { 'en' }
+      end
     end
-    context 'German' do
-      it_behaves_like 'a valid language', FactoryGirl.attributes_for(:german)
+
+    context 'with German' do
+      it_behaves_like 'a valid language' do
+        let(:lang) { FactoryGirl.create(:german_language) }
+        let(:second) { FactoryGirl.build(:german_language) }
+        let(:code) { 'de' }
+      end
     end
-    context 'French' do
-      it_behaves_like 'a valid language', FactoryGirl.attributes_for(:french)
+
+    context 'with French' do
+      it_behaves_like 'a valid language' do
+        let(:lang) { FactoryGirl.create(:french_language) }
+        let(:second) { FactoryGirl.build(:french_language) }
+        let(:code) { 'fr' }
+      end
+    end
+
+    context 'with English in three languages' do
+      let(:full) { FactoryGirl.create(:english_with_translations) }
+
+      it_behaves_like 'a valid language' do
+        let(:lang) { full }
+        let(:second) { FactoryGirl.build(:english_language) }
+        let(:code) { 'en' }
+      end
+
+      it 'always refers to the English language' do
+        full.translations.each do |trans|
+            expect(trans.translateable).to equal(full)
+        end
+      end
+
+      it 'is available in 3 languages' do
+        expect(full.translations.length).to eq(3)
+      end
+
+      it 'is available in English, German, and French' do
+        expect(full.translations.map { |t| t.language.code }.to_set).to eq(['en', 'de', 'fr'].to_set)
+      end
+
+      context 'when destroyed' do
+        it 'its translations are destroyed' do
+          expect(Multilingual::Language.count).to eq(0)
+          full  # create object
+          expect(Multilingual::Language.count).to eq(1)
+          expect(Multilingual::Translation.count).to eq(3)
+          full.destroy  # destroy object
+          expect(Multilingual::Language.count).to eq(0)
+          expect(Multilingual::Translation.count).to eq(0)
+        end
+
+        it 'other languages are untouched' do
+          full.translations.each do |trans|
+            trans.language = case trans.language.code
+              when 'de' then FactoryGirl.create(:german_language)
+              when 'fr' then FactoryGirl.create(:french_language)
+              else full
+            end
+          end
+          expect(Multilingual::Language.count).to eq(3)
+          expect(Multilingual::Translation.count).to eq(3)
+          full.destroy  # destroy object
+          expect(Multilingual::Language.count).to eq(2)
+          expect(Multilingual::Translation.count).to eq(0)
+        end
+      end
     end
   end
 end
