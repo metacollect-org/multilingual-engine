@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = 'Please refer to the README.md'
   s.license     = 'MIT'
 
-  s.files = Dir['{app,config,db,lib}/**/*', 'spec/factories/**/*' 'MIT-LICENSE', 'Rakefile', 'README.md']
+  s.files = Dir['{app,config,db,lib}/**/*', 'spec/factories/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.test_files = Dir['spec/**/*']
 
   s.add_dependency 'rails', '~> 5.0.0', '>= 5.0.0.1'

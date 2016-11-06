@@ -10,22 +10,22 @@ module Multilingual
     context 'is invalid when @code is' do
       it 'missing' do
           lang.code = nil
-          expect(lang).to_not be_valid
+          expect(lang).not_to be_valid
       end
 
       it 'empty' do
           lang.code = ''
-          expect(lang).to_not be_valid
+          expect(lang).not_to be_valid
       end
 
       it 'one-letter long' do
           lang.code = 'a'
-          expect(lang).to_not be_valid
+          expect(lang).not_to be_valid
       end
 
       it 'three-letters long' do
           lang.code = 'abc'
-          expect(lang).to_not be_valid
+          expect(lang).not_to be_valid
       end
     end
 
@@ -36,7 +36,7 @@ module Multilingual
 
       it 'is violated by another model with the same code' do
         expect(lang).to be_valid
-        expect(second).to_not be_valid
+        expect(second).not_to be_valid
       end
 
       it 'is fulfilled by another model with a different two-letter code' do
@@ -45,15 +45,24 @@ module Multilingual
         expect(second).to be_valid
       end
     end
+  end
 
-    context 'CRUD' do
-      it 'is correctly created and destroyed' do
-        expect(Multilingual::Language.count).to eq(0)
-        lang  # create object
-        expect(Multilingual::Language.count).to eq(1)
-        lang.destroy  # destroy object
-        expect(Multilingual::Language.count).to eq(0)
-      end
+  shared_examples 'an ActiveRecord with proper CRUD' do
+    it 'is correctly created' do
+      expect(Multilingual::Language.count).to eq(0)
+      expect(Multilingual::Translation.count).to eq(0)
+      lang  # create object
+      expect(Multilingual::Language.count).to eq(lang_count)
+      expect(Multilingual::Translation.count).to eq(trans_count)
+    end
+
+    it 'is correctly destroyed' do
+      lang  # create object
+      expect(Multilingual::Language.count).to eq(lang_count)
+      expect(Multilingual::Translation.count).to eq(trans_count)
+      lang.destroy
+      expect(Multilingual::Language.count).to eq(0)
+      expect(Multilingual::Translation.count).to eq(0)
     end
   end
 
@@ -64,6 +73,12 @@ module Multilingual
         let(:second) { FactoryGirl.build(:english_language) }
         let(:code) { 'en' }
       end
+
+      it_behaves_like 'an ActiveRecord with proper CRUD' do
+        let(:lang) { FactoryGirl.create(:english_language) }
+        let(:lang_count) { 1 }
+        let(:trans_count) { 0 }
+      end
     end
 
     context 'with German' do
@@ -72,6 +87,12 @@ module Multilingual
         let(:second) { FactoryGirl.build(:german_language) }
         let(:code) { 'de' }
       end
+
+      it_behaves_like 'an ActiveRecord with proper CRUD' do
+        let(:lang) { FactoryGirl.create(:german_language) }
+        let(:lang_count) { 1 }
+        let(:trans_count) { 0 }
+      end
     end
 
     context 'with French' do
@@ -79,6 +100,12 @@ module Multilingual
         let(:lang) { FactoryGirl.create(:french_language) }
         let(:second) { FactoryGirl.build(:french_language) }
         let(:code) { 'fr' }
+      end
+
+      it_behaves_like 'an ActiveRecord with proper CRUD' do
+        let(:lang) { FactoryGirl.create(:french_language) }
+        let(:lang_count) { 1 }
+        let(:trans_count) { 0 }
       end
     end
 
@@ -91,6 +118,12 @@ module Multilingual
         let(:code) { 'en' }
       end
 
+      it_behaves_like 'an ActiveRecord with proper CRUD' do
+        let(:lang) { full }
+        let(:lang_count) { 1 }
+        let(:trans_count) { 3 }
+      end
+
       it 'always refers to the English language' do
         full.translations.each do |trans|
             expect(trans.translateable).to equal(full)
@@ -98,7 +131,7 @@ module Multilingual
       end
 
       it 'is available in 3 languages' do
-        expect(full.translations.length).to eq(3)
+        expect(full.translations.size).to eq(3)
       end
 
       it 'is available in English, German, and French' do
@@ -106,23 +139,14 @@ module Multilingual
       end
 
       context 'when destroyed' do
-        it 'its translations are destroyed' do
-          expect(Multilingual::Language.count).to eq(0)
-          full  # create object
-          expect(Multilingual::Language.count).to eq(1)
-          expect(Multilingual::Translation.count).to eq(3)
-          full.destroy  # destroy object
-          expect(Multilingual::Language.count).to eq(0)
-          expect(Multilingual::Translation.count).to eq(0)
-        end
-
         it 'other languages are untouched' do
           full.translations.each do |trans|
-            trans.language = case trans.language.code
+            trans.language =
+              case trans.language.code
               when 'de' then FactoryGirl.create(:german_language)
               when 'fr' then FactoryGirl.create(:french_language)
               else full
-            end
+              end
           end
           expect(Multilingual::Language.count).to eq(3)
           expect(Multilingual::Translation.count).to eq(3)

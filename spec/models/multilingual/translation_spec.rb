@@ -11,23 +11,23 @@ module Multilingual
       context '@content is' do
         it 'missing' do
           trans.content = nil
-          expect(trans).to_not be_valid
+          expect(trans).not_to be_valid
         end
 
         it 'empty' do
           trans.content = ''
-          expect(trans).to_not be_valid
+          expect(trans).not_to be_valid
         end
       end
 
       it '@language is not present' do
           trans.language = nil
-          expect(trans).to_not be_valid
+          expect(trans).not_to be_valid
       end
 
       it '@translateable is not present' do
           trans.translateable = nil
-          expect(trans).to_not be_valid
+          expect(trans).not_to be_valid
       end
     end
 
@@ -47,7 +47,7 @@ module Multilingual
   end
 
   RSpec.describe Translation, type: :model do
-      context "the term 'English'" do
+    context "the term 'English'" do
         context 'when in English' do
           it_behaves_like 'a valid translation' do
               let(:trans) { FactoryGirl.create(:en2en_stubbed_translation) }
@@ -74,7 +74,6 @@ module Multilingual
               let(:lang_code) { 'fr' }
           end
         end
-
     end
   end
 end
