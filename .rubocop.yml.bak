@@ -1,0 +1,5 @@
+inherit_from: .rubocop-todo.yml
+require:
+  - rubocop-rspec
+Rails:
+  Enabled: true
