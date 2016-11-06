@@ -3,3 +3,7 @@ require:
   - rubocop-rspec
 Rails:
   Enabled: true
+
+Metrics/ModuleLength:
+  Enabled: false
+#  Max: 133

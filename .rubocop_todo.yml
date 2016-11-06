@@ -30,13 +30,8 @@
 # Offense count: 43
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives.
 # URISchemes: http, https
-Metrics/LineLength:
-  Max: 139
-
-# Offense count: 1
-# Configuration parameters: CountComments.
-Metrics/ModuleLength:
-  Max: 132
+#Metrics/LineLength:
+#  Max: 139
 
 # Offense count: 2
 # Configuration parameters: Max.
