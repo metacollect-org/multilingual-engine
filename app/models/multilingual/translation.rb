@@ -5,5 +5,6 @@ module Multilingual
 
     validates :content, presence: true
     validates :language, presence: true
+    validates :translateable, presence: true
   end
 end
