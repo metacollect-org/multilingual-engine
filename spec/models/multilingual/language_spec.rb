@@ -49,31 +49,31 @@ module Multilingual
 
   shared_examples 'an ActiveRecord with proper CRUD' do
     it 'has no language records before creation' do
-      expect(Multilingual::Language.count).to eq(0)
+      expect(Language.count).to eq(0)
     end
 
     it 'has no translation records before creation' do
-      expect(Multilingual::Translation.count).to eq(0)
+      expect(Translation.count).to eq(0)
     end
 
     it 'has language records after creation' do
       lang  # create object
-      expect(Multilingual::Language.count).to eq(lang_count)
+      expect(Language.count).to eq(lang_count)
     end
 
     it 'has translation records after creation' do
       lang  # create object
-      expect(Multilingual::Translation.count).to eq(trans_count)
+      expect(Translation.count).to eq(trans_count)
     end
 
     it 'has no language records after destruction' do
       lang.destroy
-      expect(Multilingual::Language.count).to eq(0)
+      expect(Language.count).to eq(0)
     end
 
     it 'has no translation records after destruction' do
       lang.destroy
-      expect(Multilingual::Translation.count).to eq(0)
+      expect(Translation.count).to eq(0)
     end
   end
 
@@ -134,18 +134,18 @@ module Multilingual
         full.translations.each do |trans|
           exp[trans.language.code] = trans.language
         end
-        expect(Multilingual::Language.get_coded).to eq(exp)
+        expect(Language.get_coded).to eq(exp)
       end
 
       context 'when created' do
         it 'there are 3 language records' do
           full # create object
-          expect(Multilingual::Language.count).to eq(3)
+          expect(Language.count).to eq(3)
         end
 
         it 'there are 3 translation records' do
           full # create object
-          expect(Multilingual::Translation.count).to eq(3)
+          expect(Translation.count).to eq(3)
         end
 
         it 'has 3 associated translations' do
@@ -166,12 +166,12 @@ module Multilingual
       context 'when destroyed' do
         it 'leaves other languages untouched' do
           full.destroy  # destroy object
-          expect(Multilingual::Language.count).to eq(2)
+          expect(Language.count).to eq(2)
         end
 
         it 'leaves no translation records' do
           full.destroy  # destroy object
-          expect(Multilingual::Translation.count).to eq(0)
+          expect(Translation.count).to eq(0)
         end
       end
     end
