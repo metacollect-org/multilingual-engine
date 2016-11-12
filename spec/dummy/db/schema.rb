@@ -20,10 +20,9 @@ ActiveRecord::Schema.define(version: 20161031070524) do
   create_table "multilingual_translations", force: :cascade do |t|
     t.string  "content"
     t.integer "language_id"
-    t.string  "translateable_type"
-    t.integer "translateable_id"
-    t.index ["translateable_type", "translateable_id"], name: "index_multilingual_translations_translateable"
+    t.string  "translatable_type"
+    t.integer "translatable_id"
+    t.index ["translatable_type", "translatable_id"], name: "index_multilingual_translations_translatable"
   end
 
-  add_foreign_key "multilingual_translations", "multilingual_languages", column: "language_id"
 end

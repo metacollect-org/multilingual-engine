@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :multilingual_translation, class: 'Multilingual::Translation' do
     trait :english_term do
-      association :translateable, factory: :english_language, strategy: :build_stubbed
+      association :translatable, factory: :english_language, strategy: :build_stubbed
     end
 
     trait :en2en do

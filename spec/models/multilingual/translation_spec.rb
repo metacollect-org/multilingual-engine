@@ -25,8 +25,8 @@ module Multilingual
           expect(trans).not_to be_valid
       end
 
-      it '@translateable is not present' do
-          trans.translateable = nil
+      it '@translatable is not present' do
+          trans.translatable = nil
           expect(trans).not_to be_valid
       end
     end
@@ -36,8 +36,8 @@ module Multilingual
     end
 
     context 'when referring to the associations' do
-      it '@translateable matches' do
-        expect(trans.translateable.code).to eq(term_code)
+      it '@translatable matches' do
+        expect(trans.translatable.code).to eq(term_code)
       end
 
       it '@language matches' do

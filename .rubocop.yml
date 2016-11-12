@@ -4,6 +4,6 @@ require:
 Rails:
   Enabled: true
 
-Metrics/ModuleLength:
-  Enabled: false
+#Metrics/ModuleLength:
+#  Enabled: false
 #  Max: 133

@@ -159,7 +159,7 @@ module Multilingual
 
         it 'its translations always refer to this term' do
           full.translations.each do |trans|
-              expect(trans.translateable).to equal(full)
+              expect(trans.translatable).to equal(full)
           end
         end
 

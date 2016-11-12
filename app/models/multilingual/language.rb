@@ -1,6 +1,6 @@
 module Multilingual
   class Language < ApplicationRecord
-    has_many :translations, as: :translateable, dependent: :destroy
+    has_many :translations, as: :translatable, dependent: :destroy
 
     validates :code, presence: true,
                      length: { is: 2 },

@@ -21,17 +21,17 @@ FactoryGirl.define do
 
       after(:stub) do |lang|
         lang.translations = [
-            build_stubbed(:multilingual_translation, :en2en, language: lang, translateable: lang),
-            build_stubbed(:multilingual_translation, :en2de, :de_stubbed_association, translateable: lang),
-            build_stubbed(:multilingual_translation, :en2en, :fr_stubbed_association, translateable: lang)
+            build_stubbed(:multilingual_translation, :en2en, language: lang, translatable: lang),
+            build_stubbed(:multilingual_translation, :en2de, :de_stubbed_association, translatable: lang),
+            build_stubbed(:multilingual_translation, :en2en, :fr_stubbed_association, translatable: lang)
         ]
       end
 
       after(:create) do |lang|
         lang.translations = [
-            create(:multilingual_translation, :en2en, language: lang, translateable: lang),
-            create(:multilingual_translation, :en2de, :de_association, translateable: lang),
-            create(:multilingual_translation, :en2en, :fr_association, translateable: lang)
+            create(:multilingual_translation, :en2en, language: lang, translatable: lang),
+            create(:multilingual_translation, :en2de, :de_association, translatable: lang),
+            create(:multilingual_translation, :en2en, :fr_association, translatable: lang)
         ]
       end
     end
