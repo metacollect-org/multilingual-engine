@@ -27,19 +27,11 @@ FactoryGirl.define do
         ]
       end
 
-#      after(:build) do |lang|
-#        lang.translations = [
-#            build(:multilingual_translation, :en2en, language: lang, translateable: lang),
-#            build(:multilingual_translation, :en2de, :de_stubbed_association, translateable: lang),
-#            build(:multilingual_translation, :en2en, :fr_stubbed_association, translateable: lang)
-#        ]
-#      end
-
       after(:create) do |lang|
         lang.translations = [
             create(:multilingual_translation, :en2en, language: lang, translateable: lang),
-            create(:multilingual_translation, :en2de, :de_stubbed_association, translateable: lang),
-            create(:multilingual_translation, :en2en, :fr_stubbed_association, translateable: lang)
+            create(:multilingual_translation, :en2de, :de_association, translateable: lang),
+            create(:multilingual_translation, :en2en, :fr_association, translateable: lang)
         ]
       end
     end

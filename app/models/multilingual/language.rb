@@ -6,5 +6,9 @@ module Multilingual
                      length: { is: 2 },
                      uniqueness: true
     validates_associated :translations
+
+    def self.get_coded
+      return Hash[Language.all.map { |l| [l.code, l] }]
+    end
   end
 end

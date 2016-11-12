@@ -48,20 +48,31 @@ module Multilingual
   end
 
   shared_examples 'an ActiveRecord with proper CRUD' do
-    it 'is correctly created' do
+    it 'has no language records before creation' do
       expect(Multilingual::Language.count).to eq(0)
+    end
+
+    it 'has no translation records before creation' do
       expect(Multilingual::Translation.count).to eq(0)
+    end
+
+    it 'has language records after creation' do
       lang  # create object
       expect(Multilingual::Language.count).to eq(lang_count)
+    end
+
+    it 'has translation records after creation' do
+      lang  # create object
       expect(Multilingual::Translation.count).to eq(trans_count)
     end
 
-    it 'is correctly destroyed' do
-      lang  # create object
-      expect(Multilingual::Language.count).to eq(lang_count)
-      expect(Multilingual::Translation.count).to eq(trans_count)
+    it 'has no language records after destruction' do
       lang.destroy
       expect(Multilingual::Language.count).to eq(0)
+    end
+
+    it 'has no translation records after destruction' do
+      lang.destroy
       expect(Multilingual::Translation.count).to eq(0)
     end
   end
@@ -118,40 +129,48 @@ module Multilingual
         let(:code) { 'en' }
       end
 
-      it_behaves_like 'an ActiveRecord with proper CRUD' do
-        let(:lang) { full }
-        let(:lang_count) { 1 }
-        let(:trans_count) { 3 }
+      it '.get_coded returns the right hash' do
+        exp = Hash.new
+        full.translations.each do |trans|
+          exp[trans.language.code] = trans.language
+        end
+        expect(Multilingual::Language.get_coded).to eq(exp)
       end
 
-      it 'always refers to the English language' do
-        full.translations.each do |trans|
-            expect(trans.translateable).to equal(full)
+      context 'when created' do
+        it 'there are 3 language records' do
+          full # create object
+          expect(Multilingual::Language.count).to eq(3)
+        end
+
+        it 'there are 3 translation records' do
+          full # create object
+          expect(Multilingual::Translation.count).to eq(3)
+        end
+
+        it 'has 3 associated translations' do
+          expect(full.translations.size).to eq(3)
+        end
+
+        it 'its translations always refer to this term' do
+          full.translations.each do |trans|
+              expect(trans.translateable).to equal(full)
+          end
+        end
+
+        it 'is available in English, German, and French languages' do
+          expect(full.translations.map { |t| t.language.code }.to_set).to eq(['en', 'de', 'fr'].to_set)
         end
       end
 
-      it 'is available in 3 languages' do
-        expect(full.translations.size).to eq(3)
-      end
-
-      it 'is available in English, German, and French' do
-        expect(full.translations.map { |t| t.language.code }.to_set).to eq(['en', 'de', 'fr'].to_set)
-      end
-
       context 'when destroyed' do
-        it 'other languages are untouched' do
-          full.translations.each do |trans|
-            trans.language =
-              case trans.language.code
-              when 'de' then FactoryGirl.create(:german_language)
-              when 'fr' then FactoryGirl.create(:french_language)
-              else full
-              end
-          end
-          expect(Multilingual::Language.count).to eq(3)
-          expect(Multilingual::Translation.count).to eq(3)
+        it 'leaves other languages untouched' do
           full.destroy  # destroy object
           expect(Multilingual::Language.count).to eq(2)
+        end
+
+        it 'leaves no translation records' do
+          full.destroy  # destroy object
           expect(Multilingual::Translation.count).to eq(0)
         end
       end
