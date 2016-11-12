@@ -4,7 +4,9 @@ module Multilingual
 
     validates :code, presence: true,
                      length: { is: 2 },
-                     uniqueness: true
+                     uniqueness: true,
+                     format: { with: /[[:lower:]]/,
+                       message: 'only allows uppercase letters' }
     validates_associated :translations
 
     def self.get_coded

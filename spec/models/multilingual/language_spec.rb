@@ -27,6 +27,11 @@ module Multilingual
           lang.code = 'abc'
           expect(lang).not_to be_valid
       end
+
+      it 'uppercase' do
+          lang.code.upcase!
+          expect(lang).not_to be_valid
+      end
     end
 
     context '@code uniqueness' do
