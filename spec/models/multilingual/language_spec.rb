@@ -126,17 +126,26 @@ module Multilingual
     end
 
     context 'with English in three languages' do
-      let(:full) { FactoryGirl.create(:english_with_translations) }
+      before(:each) do
+        en = FactoryGirl.create(:english_language)
+        de = FactoryGirl.create(:german_language)
+        fr = FactoryGirl.create(:french_language)
+        en2en = FactoryGirl.create(:en2en_translation, language: en, translatable: en)
+        en2de = FactoryGirl.create(:en2de_translation, language: de, translatable: en)
+        en2fr = FactoryGirl.create(:en2fr_translation, language: fr, translatable: en)
+        en.translations = [en2en, en2de, en2fr]
+        @full = en
+      end
 
       it_behaves_like 'a valid language' do
-        let(:lang) { full }
+        let(:lang) { @full }
         let(:second) { FactoryGirl.build(:english_language) }
         let(:code) { 'en' }
       end
 
       it '.get_coded returns the right hash' do
         exp = Hash.new
-        full.translations.each do |trans|
+        @full.translations.each do |trans|
           exp[trans.language.code] = trans.language
         end
         expect(Language.get_coded).to eq(exp)
@@ -144,38 +153,36 @@ module Multilingual
 
       context 'when created' do
         it 'there are 3 language records' do
-          full # create object
           expect(Language.count).to eq(3)
         end
 
         it 'there are 3 translation records' do
-          full # create object
           expect(Translation.count).to eq(3)
         end
 
         it 'has 3 associated translations' do
-          expect(full.translations.size).to eq(3)
+          expect(@full.translations.size).to eq(3)
         end
 
         it 'its translations always refer to this term' do
-          full.translations.each do |trans|
-              expect(trans.translatable).to equal(full)
+          @full.translations.each do |trans|
+              expect(trans.translatable).to equal(@full)
           end
         end
 
         it 'is available in English, German, and French languages' do
-          expect(full.translations.map { |t| t.language.code }.to_set).to eq(['en', 'de', 'fr'].to_set)
+          expect(@full.translations.map { |t| t.language.code }.to_set).to eq(['en', 'de', 'fr'].to_set)
         end
       end
 
       context 'when destroyed' do
         it 'leaves other languages untouched' do
-          full.destroy  # destroy object
+          @full.destroy  # destroy object
           expect(Language.count).to eq(2)
         end
 
         it 'leaves no translation records' do
-          full.destroy  # destroy object
+          @full.destroy  # destroy object
           expect(Translation.count).to eq(0)
         end
       end

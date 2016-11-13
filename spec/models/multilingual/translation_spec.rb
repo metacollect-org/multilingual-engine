@@ -50,7 +50,9 @@ module Multilingual
     context "the term 'English'" do
         context 'when in English' do
           it_behaves_like 'a valid translation' do
-              let(:trans) { FactoryGirl.create(:en2en_stubbed_translation) }
+              let(:trans) { FactoryGirl.create(:en2en_translation,
+                              language: FactoryGirl.build_stubbed(:english_language),
+                              translatable: FactoryGirl.build_stubbed(:english_language)) }
               let(:content) { 'English' }
               let(:term_code) { 'en' }
               let(:lang_code) { 'en' }
@@ -59,7 +61,9 @@ module Multilingual
 
         context 'when in German' do
           it_behaves_like 'a valid translation' do
-              let(:trans) { FactoryGirl.create(:en2de_stubbed_translation) }
+              let(:trans) { FactoryGirl.create(:en2de_translation,
+                              language: FactoryGirl.build_stubbed(:german_language),
+                              translatable: FactoryGirl.build_stubbed(:english_language)) }
               let(:content) { 'Englisch' }
               let(:term_code) { 'en' }
               let(:lang_code) { 'de' }
@@ -68,7 +72,9 @@ module Multilingual
 
         context 'when in French' do
           it_behaves_like 'a valid translation' do
-              let(:trans) { FactoryGirl.create(:en2fr_stubbed_translation) }
+              let(:trans) { FactoryGirl.create(:en2fr_translation,
+                              language: FactoryGirl.build_stubbed(:french_language),
+                              translatable: FactoryGirl.build_stubbed(:english_language)) }
               let(:content) { 'anglais' }
               let(:term_code) { 'en' }
               let(:lang_code) { 'fr' }
