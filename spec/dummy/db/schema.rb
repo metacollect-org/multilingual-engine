@@ -10,18 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161031070524) do
+ActiveRecord::Schema.define(version: 20161116221109) do
 
   create_table "multilingual_languages", force: :cascade do |t|
-    t.string "code", limit: 2
-    t.index ["code"], name: "index_multilingual_languages_on_code", unique: true
+    t.string "code", limit: 2, null: false
+    t.index ["code"], name: "index_multilingual_languages_on_code"
+  end
+
+  create_table "multilingual_translation_types", force: :cascade do |t|
+    t.string  "uid",   limit: 32, null: false
+    t.integer "level",            null: false
+    t.index ["uid"], name: "index_multilingual_translation_types_on_uid"
   end
 
   create_table "multilingual_translations", force: :cascade do |t|
-    t.string  "content"
-    t.integer "language_id"
-    t.string  "translatable_type"
-    t.integer "translatable_id"
+    t.string  "content",           null: false
+    t.integer "language_id",       null: false
+    t.string  "translatable_type", null: false
+    t.integer "translatable_id",   null: false
+    t.integer "type_id"
     t.index ["translatable_type", "translatable_id"], name: "index_multilingual_translations_translatable"
   end
 
