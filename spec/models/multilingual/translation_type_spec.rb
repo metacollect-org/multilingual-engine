@@ -33,11 +33,6 @@ module Multilingual
           trans.uid.upcase!
           expect(trans).not_to be_valid
         end
-
-        it 'uppercase' do
-          trans.uid.upcase!
-          expect(trans).not_to be_valid
-        end
       end
 
       context '@level is' do

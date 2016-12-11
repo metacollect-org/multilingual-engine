@@ -7,14 +7,14 @@ require 'multilingual/version'
 Gem::Specification.new do |s|
   s.name        = 'multilingual'
   s.version     = Multilingual::VERSION
-  s.authors     = ['Moritz E. Beber']
-  s.email       = ['midnighter@posteo.net']
+  s.authors     = ['metacollect']
+  s.email       = ['develop@metacollect.org']
   s.homepage    = 'https://github.com/metacollect-org/'
   s.summary     = 'The multilingual rails engine should be mounted to provide models for international language support of stored content.'
   s.description = 'Please refer to the README.md'
   s.license     = 'MIT'
 
-  s.files = Dir['{app,config,db,lib}/**/*', 'spec/factories/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
+  s.files = Dir['{app,config,db,lib}/**/*', 'spec/factories/**/*', 'LICENSE', 'Rakefile', 'README.md']
   s.test_files = Dir['spec/**/*']
 
   s.add_dependency 'rails', '~> 5.0.0', '>= 5.0.0.1'

@@ -10,6 +10,7 @@ Provides three models (`Multilingual::`):
    intermediate, expert, or similar.
 
 ## Usage
+
 How to use my plugin.
 
 If you want to use translation types, your application should open the class
@@ -40,4 +41,5 @@ $ gem install multilingual
 Contribution directions go here.
 
 ## License
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+The gem is available as open source under the terms of the [MIT
+License](MIT-LICENSE).

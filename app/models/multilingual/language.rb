@@ -5,7 +5,7 @@ module Multilingual
     validates :code, presence: true,
                      length: { is: 2 },
                      uniqueness: true,
-                     format: { with: /[[:lower:]]/,
+                     format: { with: /[[:lower:]]{2}/,
                        message: 'only allows lowercase letters' }
     validates_associated :translations
 
